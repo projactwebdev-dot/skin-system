@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบผิวหนัง | นันทกรณ์ น้อยฉิม</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Kanit:wght@300;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --skin1: #f5cba7;
+      --skin2: #e8956d;
+      --skin3: #c0614a;
+      --skin4: #7b3f2d;
+      --deep: #2c1810;
+      --cream: #fdf6ee;
+      --accent: #d4845a;
+      --gold: #c9974a;
+      --pale: #faebd7;
+      --text: #3a1f0f;
+      --muted: #8b5e42;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--cream);
+      font-family: 'Sarabun', sans-serif;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ========== HERO ========== */
+    .hero {
+      min-height: 100vh;
+      background: var(--deep);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(197,97,74,0.35) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(201,151,74,0.2) 0%, transparent 60%);
+    }
+
+    /* Cross-section layers decoration */
+    .layer-deco {
+      position: absolute;
+      bottom: 0;
+      left: 0; right: 0;
+      height: 220px;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .layer-deco span {
+      display: block;
+      position: absolute;
+      left: 0; right: 0;
+      border-radius: 60% 60% 0 0 / 40px;
+    }
+    .layer-deco .l1 { bottom: 160px; height: 70px; background: rgba(245,203,167,0.15); }
+    .layer-deco .l2 { bottom: 100px; height: 70px; background: rgba(192,97,74,0.13); }
+    .layer-deco .l3 { bottom: 40px;  height: 70px; background: rgba(123,63,45,0.15); }
+    .layer-deco .l4 { bottom: 0;     height: 55px; background: rgba(44,24,16,0.5); }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem 1.5rem 10rem;
+      max-width: 800px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(201,151,74,0.18);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.35rem 1.1rem;
+      border-radius: 99px;
+      margin-bottom: 1.6rem;
+      animation: fadeUp 0.8s both;
+    }
+
+    .hero h1 {
+      font-family: 'Kanit', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      color: #fff;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      animation: fadeUp 0.9s 0.1s both;
+    }
+    .hero h1 span { color: var(--skin1); }
+
+    .hero-sub {
+      margin-top: 1.2rem;
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.55);
+      font-weight: 300;
+      animation: fadeUp 0.9s 0.2s both;
+    }
+
+    .author-tag {
+      margin-top: 2.2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 0.6rem 1.4rem;
+      border-radius: 99px;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.92rem;
+      animation: fadeUp 0.9s 0.3s both;
+    }
+    .author-dot {
+      width: 8px; height: 8px;
+      background: var(--skin2);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      animation: bounce 2s infinite;
+    }
+    .scroll-hint svg { opacity: 0.4; }
+
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(8px); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== NAV PILLS ========== */
+    .nav-strip {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(253,246,238,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(197,97,74,0.12);
+      padding: 0.7rem 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-strip::-webkit-scrollbar { display: none; }
+    .nav-pill {
+      flex-shrink: 0;
+      background: transparent;
+      border: 1px solid rgba(197,97,74,0.28);
+      color: var(--muted);
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.8rem;
+      padding: 0.38rem 1rem;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.22s;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .nav-pill:hover, .nav-pill.active {
+      background: var(--skin3);
+      border-color: var(--skin3);
+      color: #fff;
+    }
+
+    /* ========== MAIN CONTENT ========== */
+    main { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 6rem; }
+
+    /* ========== SECTION HEADER ========== */
+    .section-num {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .section-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: clamp(1.6rem, 4vw, 2.3rem);
+      font-weight: 700;
+      color: var(--deep);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    .section-title em {
+      font-style: normal;
+      color: var(--skin3);
+    }
+    .section-rule {
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--skin3), var(--gold));
+      border-radius: 2px;
+      margin-bottom: 1.6rem;
+    }
+
+    /* ========== SECTION BLOCKS ========== */
+    .section-block {
+      padding: 4rem 0 2rem;
+      border-bottom: 1px solid rgba(197,97,74,0.1);
+    }
+    .section-block:last-child { border-bottom: none; }
+
+    /* ========== OVERVIEW INTRO ========== */
+    .intro-card {
+      background: linear-gradient(135deg, var(--deep) 0%, #4a2618 100%);
+      border-radius: 20px;
+      padding: 2.5rem 2.5rem 2.5rem 2rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+    }
+    .intro-card::after {
+      content: '🧬';
+      position: absolute;
+      right: 1.5rem;
+      top: 1.5rem;
+      font-size: 3rem;
+      opacity: 0.18;
+    }
+    .intro-card p { font-size: 1.05rem; line-height: 1.9; color: rgba(255,255,255,0.82); }
+    .intro-card strong { color: var(--skin1); }
+
+    /* ========== INFO CARDS GRID ========== */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+    .info-card {
+      background: var(--pale);
+      border: 1px solid rgba(197,97,74,0.15);
+      border-radius: 16px;
+      padding: 1.4rem 1.4rem 1.2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .info-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(197,97,74,0.12);
+    }
+    .card-icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+    .card-label {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--skin3);
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+    .card-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--deep);
+      margin-bottom: 0.5rem;
+    }
+    .card-body { font-size: 0.88rem; color: var(--muted); line-height: 1.75; }
+
+    /* ========== LAYER DIAGRAM ========== */
+    .layer-diagram {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(197,97,74,0.18);
+      margin-bottom: 2rem;
+    }
+    .layer-row {
+      display: flex;
+      align-items: stretch;
+      min-height: 64px;
+      transition: filter 0.2s;
+    }
+    .layer-row:hover { filter: brightness(1.04); }
+    .layer-swatch {
+      width: 90px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.9);
+      text-transform: uppercase;
+      writing-mode: horizontal-tb;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    .layer-content {
+      flex: 1;
+      padding: 0.9rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-left: 1px solid rgba(255,255,255,0.08);
+    }
+    .layer-name {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .layer-desc { font-size: 0.83rem; line-height: 1.6; }
+
+    /* Epidermis sub-layers */
+    .sub-layers { margin: 1rem 0 1.5rem; }
+    .sub-layer {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(197,97,74,0.1);
+    }
+    .sub-num {
+      width: 28px; height: 28px;
+      background: var(--skin3);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .sub-text strong {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.9rem;
+      color: var(--deep);
+      display: block;
+    }
+    .sub-text span { font-size: 0.82rem; color: var(--muted); }
+
+    /* ========== FEATURE HIGHLIGHT ========== */
+    .highlight-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 600px) {
+      .highlight-row { grid-template-columns: 1fr; }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+    .highlight-box {
+      border-radius: 16px;
+      padding: 1.4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .highlight-box.dark {
+      background: var(--deep);
+      color: #fff;
+    }
+    .highlight-box.warm {
+      background: linear-gradient(135deg, #f9e4ce 0%, #f0c9a0 100%);
+    }
+    .highlight-box h4 {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+    .highlight-box.dark h4 { color: var(--skin1); }
+    .highlight-box.warm h4 { color: var(--deep); }
+    .highlight-box p {
+      font-size: 0.86rem;
+      line-height: 1.75;
+    }
+    .highlight-box.dark p { color: rgba(255,255,255,0.72); }
+    .highlight-box.warm p { color: var(--text); }
+
+    /* ========== ORGAN LIST ========== */
+    .organ-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .organ-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.3rem;
+      border: 1px solid rgba(197,97,74,0.14);
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .organ-card:hover {
+      border-color: var(--skin3);
+      box-shadow: 0 6px 20px rgba(197,97,74,0.12);
+    }
+    .organ-emoji { font-size: 2rem; margin-bottom: 0.5rem; }
+    .organ-name {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--deep);
+      margin-bottom: 0.3rem;
+    }
+    .organ-eng { font-size: 0.75rem; color: var(--skin3); margin-bottom: 0.5rem; }
+    .organ-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+
+    /* ========== TIP BOXES ========== */
+    .tip-box {
+      background: linear-gradient(135deg, rgba(201,151,74,0.1) 0%, rgba(197,97,74,0.07) 100%);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 12px 12px 0;
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 1.2rem;
+    }
+    .tip-box .tip-head {
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+    .tip-box p { font-size: 0.9rem; color: var(--text); line-height: 1.75; }
+
+    /* ========== MAINTENANCE LIST ========== */
+    .maint-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+    .maint-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      background: #fff;
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      border: 1px solid rgba(197,97,74,0.1);
+    }
+    .maint-icon {
+      width: 36px; height: 36px;
+      background: var(--pale);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .maint-text strong {
+      display: block;
+      font-family: 'Kanit', sans-serif;
+      font-size: 0.95rem;
+      color: var(--deep);
+      margin-bottom: 0.15rem;
+    }
+    .maint-text span { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* ========== FOOTER ========== */
+    footer {
+      background: var(--deep);
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+      padding: 3rem 1.5rem 2.5rem;
+      font-size: 0.85rem;
+      line-height: 2;
+    }
+    footer strong { color: var(--skin1); font-size: 1.05rem; }
+    footer .divider {
+      width: 40px; height: 2px;
+      background: var(--skin3);
+      margin: 1rem auto;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="layer-deco">
+    <span class="l1"></span>
+    <span class="l2"></span>
+    <span class="l3"></span>
+    <span class="l4"></span>
+  </div>
+  <div class="hero-inner">
+    <div class="badge">📚 สุขศึกษา ม.4 · ระบบผิวหนัง</div>
+    <h1>ระบบ<span>ผิวหนัง</span><br/>Integumentary<br/>System</h1>
+    <p class="hero-sub">โครงสร้างและส่วนประกอบของผิวหนัง</p>
+    <div class="author-tag">
+      <span class="author-dot"></span>
+      นันทกรณ์ น้อยฉิม &nbsp;|&nbsp; ม.4/10 เลขที่ 9
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    เลื่อนลงเพื่ออ่าน
+  </div>
+</section>
+
+<!-- ===== NAV ===== -->
+<nav class="nav-strip">
+  <a class="nav-pill active" href="#overview">ภาพรวม</a>
+  <a class="nav-pill" href="#epidermis">หนังกำพร้า</a>
+  <a class="nav-pill" href="#dermis">หนังแท้</a>
+  <a class="nav-pill" href="#organs">อวัยวะที่กำเนิด</a>
+  <a class="nav-pill" href="#maintenance">การดูแล</a>
+</nav>
+
+<main>
+
+  <!-- ===== OVERVIEW ===== -->
+  <section class="section-block" id="overview">
+    <div class="section-num">บทนำ</div>
+    <h2 class="section-title">ภาพรวมระบบ<em>ผิวหนัง</em></h2>
+    <div class="section-rule"></div>
+
+    <div class="intro-card">
+      <p>ผิวหนัง (<strong>Integumentary System</strong>) เป็น<strong>อวัยวะที่ใหญ่ที่สุด</strong>ในร่างกายมนุษย์ ทำหน้าที่เป็นเกราะป้องกันร่างกายจากสภาพแวดล้อมภายนอก ควบคุมอุณหภูมิร่างกาย รับความรู้สึกจากสิ่งกระตุ้น และช่วยในการขับของเสียออกจากร่างกาย ในผู้ใหญ่ผิวหนังมีพื้นที่ประมาณ <strong>1.5–2 ตารางเมตร</strong> และมีน้ำหนักประมาณ <strong>4–5 กิโลกรัม</strong></p>
+    </div>
+
+    <div class="cards-grid">
+      <div class="info-card">
+        <div class="card-icon">🛡️</div>
+        <div class="card-label">หน้าที่หลัก</div>
+        <div class="card-title">ป้องกันร่างกาย</div>
+        <div class="card-body">กั้นเชื้อโรค สารพิษ แสง UV รังสีต่าง ๆ และป้องกันการสูญเสียน้ำออกจากร่างกาย</div>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">🌡️</div>
+        <div class="card-label">หน้าที่หลัก</div>
+        <div class="card-title">ควบคุมอุณหภูมิ</div>
+        <div class="card-body">ผ่านต่อมเหงื่อและหลอดเลือดที่ผิวหนัง ช่วยรักษาอุณหภูมิร่างกายให้คงที่</div>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">👆</div>
+        <div class="card-label">หน้าที่หลัก</div>
+        <div class="card-title">รับความรู้สึก</div>
+        <div class="card-body">รับสัมผัส แรงกด ความเจ็บปวด อุณหภูมิ ผ่านเซลล์ประสาทในผิวหนัง</div>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">☀️</div>
+        <div class="card-label">หน้าที่หลัก</div>
+        <div class="card-title">สังเคราะห์วิตามิน D</div>
+        <div class="card-body">ผิวหนังสังเคราะห์วิตามิน D เมื่อได้รับแสงแดด ซึ่งจำเป็นสำหรับการดูดซึมแคลเซียม</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EPIDERMIS ===== -->
+  <section class="section-block" id="epidermis">
+    <div class="section-num">หัวข้อที่ 1</div>
+    <h2 class="section-title">หนังกำพร้า<br/><em>Epidermis</em></h2>
+    <div class="section-rule"></div>
+
+    <div class="tip-box">
+      <div class="tip-head">💡 ข้อมูลสำคัญ</div>
+      <p>หนังกำพร้าเป็นชั้นนอกสุดของผิวหนัง ประกอบด้วยเซลล์ที่ไม่มีหลอดเลือดมาเลี้ยง ได้รับสารอาหารจากการแพร่ผ่านจากชั้นหนังแท้ มีความหนาประมาณ <strong>0.05–1.5 มิลลิเมตร</strong></p>
+    </div>
+
+    <h3 style="font-family:'Kanit',sans-serif; font-size:1rem; color:var(--deep); margin-bottom:0.8rem;">ชั้นย่อยของหนังกำพร้า (จากนอกสู่ใน)</h3>
+    <div class="sub-layers">
+      <div class="sub-layer">
+        <div class="sub-num">1</div>
+        <div class="sub-text">
+          <strong>Stratum Corneum (ชั้นเซลล์ตาย)</strong>
+          <span>ชั้นนอกสุด ประกอบด้วยเซลล์ที่ตายแล้วและเต็มไปด้วยโปรตีน Keratin ทำหน้าที่ป้องกันร่างกายและป้องกันการสูญเสียน้ำ</span>
+        </div>
+      </div>
+      <div class="sub-layer">
+        <div class="sub-num">2</div>
+        <div class="sub-text">
+          <strong>Stratum Lucidum (ชั้นใส)</strong>
+          <span>พบเฉพาะผิวหนังที่หนา เช่น ฝ่ามือ ฝ่าเท้า ประกอบด้วยเซลล์แบนที่เต็มไปด้วย Eleidin</span>
+        </div>
+      </div>
+      <div class="sub-layer">
+        <div class="sub-num">3</div>
+        <div class="sub-text">
+          <strong>Stratum Granulosum (ชั้นเม็ด)</strong>
+          <span>เซลล์มีรูปร่างแบน ภายในมีเม็ดสีเข้ม (Keratohyalin granules) ซึ่งเป็นสารตั้งต้นของ Keratin</span>
+        </div>
+      </div>
+      <div class="sub-layer">
+        <div class="sub-num">4</div>
+        <div class="sub-text">
+          <strong>Stratum Spinosum (ชั้นหนาม)</strong>
+          <span>เซลล์มีหนามเล็ก ๆ บนผิว เป็นชั้นที่มีความหนามากที่สุด มี Langerhans cells ซึ่งทำหน้าที่ด้านภูมิคุ้มกัน</span>
+        </div>
+      </div>
+      <div class="sub-layer">
+        <div class="sub-num">5</div>
+        <div class="sub-text">
+          <strong>Stratum Basale (ชั้นฐาน)</strong>
+          <span>ชั้นในสุด เป็นแหล่งกำเนิดเซลล์ใหม่ มี Melanocytes สร้างเม็ดสี Melanin ป้องกันรังสี UV</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-row">
+      <div class="highlight-box dark">
+        <h4>🔬 เซลล์หลักในหนังกำพร้า</h4>
+        <p><strong style="color:var(--skin1)">Keratinocytes</strong> — เซลล์หลัก สร้าง Keratin<br/>
+        <strong style="color:var(--skin1)">Melanocytes</strong> — สร้างเม็ดสีผิว Melanin<br/>
+        <strong style="color:var(--skin1)">Langerhans cells</strong> — เซลล์ภูมิคุ้มกัน<br/>
+        <strong style="color:var(--skin1)">Merkel cells</strong> — รับความรู้สึกสัมผัส</p>
+      </div>
+      <div class="highlight-box warm">
+        <h4>⏱️ วงจรชีวิตเซลล์ผิวหนัง</h4>
+        <p>เซลล์ที่สร้างจากชั้น Stratum Basale ใช้เวลาประมาณ <strong>2–4 สัปดาห์</strong> เคลื่อนตัวขึ้นมาจนถึงผิวนอกสุดและหลุดออกไป กระบวนการนี้เรียกว่า <strong>Desquamation</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DERMIS ===== -->
+  <section class="section-block" id="dermis">
+    <div class="section-num">หัวข้อที่ 2</div>
+    <h2 class="section-title">หนังแท้<br/><em>Dermis</em></h2>
+    <div class="section-rule"></div>
+
+    <div class="layer-diagram">
+      <div class="layer-row" style="background:#d4845a20;">
+        <div class="layer-swatch" style="background:var(--skin3);">Papillary</div>
+        <div class="layer-content">
+          <div class="layer-name" style="color:var(--deep);">ชั้น Papillary Dermis (ชั้นบน)</div>
+          <div class="layer-desc" style="color:var(--muted);">เนื้อเยื่อเกี่ยวพันชนิดหลวม มีหลอดเลือดฝอย เส้นประสาท และนิ้วนูน (Dermal Papillae) ที่ยื่นเข้าไปในหนังกำพร้า ทำให้เกิดลายนิ้วมือ</div>
+        </div>
+      </div>
+      <div class="layer-row" style="background:#c0614a15;">
+        <div class="layer-swatch" style="background:var(--skin4);">Reticular</div>
+        <div class="layer-content">
+          <div class="layer-name" style="color:var(--deep);">ชั้น Reticular Dermis (ชั้นล่าง)</div>
+          <div class="layer-desc" style="color:var(--muted);">เนื้อเยื่อเกี่ยวพันชนิดแน่น มีเส้นใย Collagen และ Elastin หนาแน่น ให้ความแข็งแรงและความยืดหยุ่นแก่ผิวหนัง</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cards-grid">
+      <div class="info-card">
+        <div class="card-icon">💪</div>
+        <div class="card-label">โปรตีนสำคัญ</div>
+        <div class="card-title">คอลลาเจน (Collagen)</div>
+        <div class="card-body">คิดเป็น 70% ของน้ำหนักแห้งของหนังแท้ ให้ความแข็งแรงและโครงสร้างแก่ผิวหนัง</div>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">🔄</div>
+        <div class="card-label">โปรตีนสำคัญ</div>
+        <div class="card-title">อิลาสติน (Elastin)</div>
+        <div class="card-body">ให้ความยืดหยุ่นแก่ผิวหนัง ช่วยให้ผิวกลับคืนสู่รูปทรงเดิมหลังถูกยืดหรือบีบ</div>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">🩸</div>
+        <div class="card-label">โครงสร้างสำคัญ</div>
+        <div class="card-title">หลอดเลือด</div>
+        <div class="card-body">จัดหาสารอาหารและออกซิเจน ช่วยควบคุมอุณหภูมิร่างกายโดยการขยายหรือหดตัว</div>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">⚡</div>
+        <div class="card-label">โครงสร้างสำคัญ</div>
+        <div class="card-title">เส้นประสาท</div>
+        <div class="card-body">รับความรู้สึกสัมผัส ความร้อน-เย็น ความเจ็บปวด และแรงกดผ่าน Nerve receptors</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-head">📌 ชั้นไฮโปเดอร์มิส (Hypodermis/Subcutaneous layer)</div>
+      <p>ด้านล่างหนังแท้คือชั้น <strong>ไฮโปเดอร์มิส</strong> ซึ่งเป็นชั้นของเนื้อเยื่อไขมัน (Adipose tissue) ทำหน้าที่กักเก็บพลังงาน ป้องกันการกระแทก รักษาความอบอุ่น และยึดผิวหนังกับกล้ามเนื้อและกระดูกที่อยู่ด้านล่าง</p>
+    </div>
+  </section>
+
+  <!-- ===== SKIN ORGANS ===== -->
+  <section class="section-block" id="organs">
+    <div class="section-num">หัวข้อที่ 3</div>
+    <h2 class="section-title">อวัยวะที่<em>กำเนิดจากผิวหนัง</em></h2>
+    <div class="section-rule"></div>
+
+    <div class="organ-grid">
+      <div class="organ-card">
+        <div class="organ-emoji">💧</div>
+        <div class="organ-name">ต่อมเหงื่อ</div>
+        <div class="organ-eng">Sweat Glands</div>
+        <div class="organ-desc">มี 2 ชนิด คือ Eccrine (ทั่วร่างกาย) และ Apocrine (รักแร้ ขาหนีบ) ช่วยระบายความร้อนและขับของเสีย</div>
+      </div>
+      <div class="organ-card">
+        <div class="organ-emoji">🫧</div>
+        <div class="organ-name">ต่อมไขมัน</div>
+        <div class="organ-eng">Sebaceous Glands</div>
+        <div class="organ-desc">ผลิต Sebum (น้ำมันธรรมชาติ) ช่วยหล่อลื่นและป้องกันผิวหนังและเส้นผม</div>
+      </div>
+      <div class="organ-card">
+        <div class="organ-emoji">🧶</div>
+        <div class="organ-name">เส้นผมและขน</div>
+        <div class="organ-eng">Hair &amp; Hair Follicles</div>
+        <div class="organ-desc">กำเนิดจาก Hair Follicle ในหนังแท้ ช่วยป้องกัน ให้ความอบอุ่น และรับความรู้สึก</div>
+      </div>
+      <div class="organ-card">
+        <div class="organ-emoji">💅</div>
+        <div class="organ-name">เล็บ</div>
+        <div class="organ-eng">Nails</div>
+        <div class="organ-desc">แผ่น Keratin แข็งที่ปลายนิ้ว ช่วยป้องกันปลายนิ้ว เพิ่มความสามารถในการหยิบจับ</div>
+      </div>
+      <div class="organ-card">
+        <div class="organ-emoji">🦠</div>
+        <div class="organ-name">เซลล์เมลาโนไซต์</div>
+        <div class="organ-eng">Melanocytes</div>
+        <div class="organ-desc">สร้างเม็ดสี Melanin กำหนดสีของผิวหนัง ผม และดวงตา ป้องกันรังสี UV</div>
+      </div>
+      <div class="organ-card">
+        <div class="organ-emoji">🔵</div>
+        <div class="organ-name">ต่อมน้ำนม</div>
+        <div class="organ-eng">Mammary Glands</div>
+        <div class="organ-desc">ต่อมเหงื่อชนิดพิเศษที่ดัดแปลงเป็นต่อมน้ำนม ผลิตน้ำนมสำหรับเลี้ยงทารก</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MAINTENANCE ===== -->
+  <section class="section-block" id="maintenance">
+    <div class="section-num">หัวข้อที่ 4</div>
+    <h2 class="section-title">การสร้างเสริมและดำรง<br/><em>ประสิทธิภาพของระบบผิวหนัง</em></h2>
+    <div class="section-rule"></div>
+
+    <ul class="maint-list">
+      <li class="maint-item">
+        <div class="maint-icon">🍎</div>
+        <div class="maint-text">
+          <strong>โภชนาการที่เหมาะสม</strong>
+          <span>รับประทานอาหารที่มีวิตามิน C (สร้างคอลลาเจน) วิตามิน E (ต้านอนุมูลอิสระ) สังกะสี และโปรตีนเพียงพอ เพื่อบำรุงเซลล์ผิวหนัง</span>
+        </div>
+      </li>
+      <li class="maint-item">
+        <div class="maint-icon">💧</div>
+        <div class="maint-text">
+          <strong>ดื่มน้ำให้เพียงพอ</strong>
+          <span>ร่างกายต้องการน้ำอย่างน้อย 8 แก้วต่อวัน เพื่อรักษาความชุ่มชื้นของผิวหนัง ช่วยให้ผิวนุ่มและยืดหยุ่น</span>
+        </div>
+      </li>
+      <li class="maint-item">
+        <div class="maint-icon">🧴</div>
+        <div class="maint-text">
+          <strong>ทาครีมกันแดด (SPF)</strong>
+          <span>ป้องกันรังสี UVA และ UVB ที่ทำลายเซลล์ผิวหนัง ลดความเสี่ยงมะเร็งผิวหนังและผิวเสื่อมสภาพก่อนวัย</span>
+        </div>
+      </li>
+      <li class="maint-item">
+        <div class="maint-icon">🛁</div>
+        <div class="maint-text">
+          <strong>ทำความสะอาดผิวอย่างถูกวิธี</strong>
+          <span>อาบน้ำชำระล้างสิ่งสกปรกและแบคทีเรีย หลีกเลี่ยงสบู่ที่มีฤทธิ์รุนแรง ซึ่งทำลายชั้นไขมันธรรมชาติของผิว</span>
+        </div>
+      </li>
+      <li class="maint-item">
+        <div class="maint-icon">😴</div>
+        <div class="maint-text">
+          <strong>นอนหลับพักผ่อนให้เพียงพอ</strong>
+          <span>ขณะนอนหลับร่างกายซ่อมแซมเซลล์และสร้างคอลลาเจน ควรนอนหลับ 7–9 ชั่วโมงต่อคืน</span>
+        </div>
+      </li>
+      <li class="maint-item">
+        <div class="maint-icon">🚭</div>
+        <div class="maint-text">
+          <strong>หลีกเลี่ยงสารที่เป็นอันตราย</strong>
+          <span>งดสูบบุหรี่และลดการดื่มแอลกอฮอล์ สารเหล่านี้ทำลายคอลลาเจน ทำให้ผิวแก่ก่อนวัยและเสี่ยงต่อโรคผิวหนัง</span>
+        </div>
+      </li>
+      <li class="maint-item">
+        <div class="maint-icon">🏃</div>
+        <div class="maint-text">
+          <strong>ออกกำลังกายสม่ำเสมอ</strong>
+          <span>เพิ่มการไหลเวียนเลือดไปเลี้ยงผิวหนัง ช่วยนำสารอาหารและออกซิเจนมาสู่เซลล์ผิวหนัง และขับของเสียออกทางเหงื่อ</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <strong>นันทกรณ์ น้อยฉิม</strong>
+  <div class="divider"></div>
+  ชั้นมัธยมศึกษาปีที่ 4/10 · เลขที่ 9<br/>
+  วิชาสุขศึกษา · ระบบผิวหนัง (Integumentary System)
+</footer>
+
+<script>
+  // Active nav pill on scroll
+  const sections = document.querySelectorAll('.section-block');
+  const pills = document.querySelectorAll('.nav-pill');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        pills.forEach(p => {
+          p.classList.toggle('active', p.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { threshold: 0.35 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
